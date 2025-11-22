@@ -23,6 +23,7 @@ module Dyna.Brick.Run(
 import Control.Concurrent (forkIO, killThread)
 import Control.Concurrent.MVar qualified as M
 import Control.Monad.Reader
+import Control.Monad.State
 import Control.Monad.Base
 import Control.Monad.Trans.Control (MonadBaseControl(..))
 import Control.Concurrent.Chan.Unagi
@@ -81,7 +82,7 @@ runApp Spec{..} dynActs = do
         liftIO $ writeChan (fst env'eventChan) event
         continueWithoutRedraw
       AppEvent act -> case act of
-        UpdateWidgets ws -> pure ()
+        UpdateWidgets ws -> put ws
         BrickAct act     ->
           case act of
             Quit -> halt
